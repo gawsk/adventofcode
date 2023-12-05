@@ -38,6 +38,33 @@ public class GameChecker {
         return true;
     }
 
+    public static int gamePower(String game) {
+        String[] gameIdSplit = game.split(":");
+        String[] gameRoundSplit = gameIdSplit[1].split(";");
+        int minRed = 0;
+        int minBlue = 0;
+        int minGreen = 0;
+        for (int round = 0; round < gameRoundSplit.length; round++) {
+            String[] cubeSplit = gameRoundSplit[round].split(",");
+            for (int i = 0; i < cubeSplit.length; i++) {
+                String[] cubeDraw = cubeSplit[i].split(" ");
+                switch(cubeDraw[2]) {
+                    case "red":
+                        minRed = Math.max(minRed, Integer.valueOf(cubeDraw[1]));
+                        break;
+                    case "green":
+                        minGreen = Math.max(minGreen, Integer.valueOf(cubeDraw[1]));
+                        break;
+                    case "blue":
+                        minBlue = Math.max(minBlue, Integer.valueOf(cubeDraw[1]));
+                        break;
+                }
+            } 
+        }
+        
+        return minRed * minBlue * minGreen;
+    }
+
     
 
     public static void main(String[] args) throws Exception {
@@ -46,11 +73,16 @@ public class GameChecker {
         try(BufferedReader br = new BufferedReader(new FileReader(filePath + "input.txt"))) {
             String line = br.readLine();
             int total = 0;
-            int id = 1;
+            // int id = 1;
+            // while (line != null) {
+            //     total += gameValidity(line) ? id : 0;
+            //     line = br.readLine();
+            //     id++;
+            // }
+
             while (line != null) {
-                total += gameValidity(line) ? id : 0;
+                total += gamePower(line);
                 line = br.readLine();
-                id++;
             }
             System.out.println(total);
         }
